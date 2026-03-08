@@ -1,0 +1,59 @@
+name: task-board-security
+services:
+  nginx:
+    build: ./nginx
+    ports: ["80:80"]
+    networks: ["task-net"]
+    depends_on: ["auth-service", "task-service", "user-service"]
+
+  auth-service:
+    build: ./auth-service
+    environment: [DB_HOST=auth-db, JWT_SECRET=dev-secret]
+    networks: ["task-net"]
+    depends_on: ["auth-db"]
+
+  auth-db:
+    image: postgres:15-alpine
+    environment: [POSTGRES_USER=auth_user, POSTGRES_PASSWORD=auth_secret, POSTGRES_DB=auth_db]
+    networks: ["task-net"]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U auth_user"], interval: 5s, retries: 5 }
+
+  task-service:
+    build: ./task-service
+    environment: [DB_HOST=task-db, JWT_SECRET=dev-secret]
+    networks: ["task-net"]
+    depends_on: ["task-db"]
+
+  task-db:
+    image: postgres:15-alpine
+    environment: [POSTGRES_USER=task_user, POSTGRES_PASSWORD=task_secret, POSTGRES_DB=task_db]
+    networks: ["task-net"]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U task_user"], interval: 5s, retries: 5 }
+
+  user-service:
+    build: ./user-service
+    environment: [DB_HOST=user-db, JWT_SECRET=dev-secret]
+    networks: ["task-net"]
+    depends_on: ["user-db"]
+
+  user-db:
+    image: postgres:15-alpine
+    environment: [POSTGRES_USER=user_user, POSTGRES_PASSWORD=user_secret, POSTGRES_DB=user_db]
+    networks: ["task-net"]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U user_user"], interval: 5s, retries: 5 }
+
+  loki:
+    image: grafana/loki:2.9.0
+    ports: ["3100:3100"]
+    networks: ["task-net"]
+
+  grafana:
+    image: grafana/grafana:10.0.0
+    ports: ["3030:3000"]
+    environment: [GF_SECURITY_ADMIN_PASSWORD=admin]
+    volumes: ["./monitoring/grafana:/etc/grafana/provisioning/datasources:ro"]
+    networks: ["task-net"]
+
+networks:
+  task-net:
+    driver: bridge

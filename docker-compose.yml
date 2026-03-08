@@ -1,0 +1,33 @@
+name: task-board-security
+services:
+  nginx:
+    build: ./nginx
+    container_name: taskboard-gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    networks:
+      - taskboard-net
+
+  auth-service:
+    build: ./auth-service
+    container_name: taskboard-auth
+    networks:
+      - taskboard-net
+
+  task-service:
+    build: ./task-service
+    container_name: taskboard-task
+    networks:
+      - taskboard-net
+
+  user-service:
+    build: ./user-service
+    container_name: taskboard-user
+    networks:
+      - taskboard-net
+
+networks:
+  taskboard-net:
+    driver: bridge

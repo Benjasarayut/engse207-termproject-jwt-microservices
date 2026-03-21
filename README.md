@@ -8,10 +8,10 @@
 
 ## 📌 แนวคิดของระบบ
 
-ระบบนี้ใช้ **Microservices Architecture** ซึ่งเป็นการออกแบบให้ระบบถูกแยกออกเป็นหลาย service ที่ทำงานอิสระต่อกัน  [oai_citation:0‡GitHub](https://github.com/oussamabasry/microservices-jwt-spring-security-from-scratch?utm_source=chatgpt.com)  
+ระบบนี้ใช้ **Microservices Architecture** ซึ่งเป็นการออกแบบให้ระบบถูกแยกออกเป็นหลาย service ที่ทำงานอิสระต่อกัน   
 
 และใช้ **JWT (JSON Web Token)** สำหรับ Authentication  
-เพื่อให้สามารถยืนยันตัวตนผู้ใช้งานได้อย่างปลอดภัย โดย token จะถูกส่งไปกับทุก request  [oai_citation:1‡GitHub](https://github.com/murraco/spring-boot-jwt?utm_source=chatgpt.com)  
+เพื่อให้สามารถยืนยันตัวตนผู้ใช้งานได้อย่างปลอดภัย โดย token จะถูกส่งไปกับทุก request    
 
 ---
 
